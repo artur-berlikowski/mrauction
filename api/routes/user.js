@@ -1,21 +1,14 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
+const dataManager = require('./../utility/DataManager')
 const data = require('./../data')
 const passwords = require('./../utility/passwords')
 const router = express.Router()
 
 router.route('/')
   .get(async (request, response) => {
-    let connection;
-    let result;
-    try {
-      connection = await data.connect()
-      result = await connection.query('SELECT name FROM user')
-    } catch (error) {
-      console.log(error)
-    } finally {
-      if (connection) connection.end()
-    }
-    if (result) response.json(result)
+    let result = await dataManager.query('SELECT name FROM user')
+    response.json(result)
   })
   .post(async (request, response) => {
     const body = request.body
@@ -94,6 +87,35 @@ router.route('/')
       if (connection) connection.end()
       response.json({ "message": `user ${params.name} has been deleted` })
       return
+    }
+  })
+
+router.route('/auth')
+  .get(async (request, response) => {
+    response.json({ "FUCK": "OFF" })
+  })
+  .post(async (request, response) => {
+    let body = request.body
+    let username = body.username
+    let password = body.password
+    let connection
+    let result
+    let userId
+    let errors = false;
+
+    try {
+      connection = await data.connect()
+    } catch (error) {
+      errors = true
+
+    } finally {
+      if (errors !== false) {
+        response.json({
+          "auth": true
+        })
+        if (connection) connection.end()
+        return
+      }
     }
   })
 

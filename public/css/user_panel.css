@@ -1,0 +1,10 @@
+#user_panel button {
+  background: #65CF7E;
+  color: #262626;
+  border: none;
+}
+
+#user_panel button:hover {
+  background: #45b860;
+  color: #ffffff;
+}

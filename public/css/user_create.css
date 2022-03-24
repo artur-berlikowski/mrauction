@@ -1,0 +1,21 @@
+#user_create .form-group {
+  background: #65CF7E;
+  padding: .75em;
+}
+
+#user_create .form-group-first {
+  border-radius: .25em .25em 0 0;
+}
+
+#user_create .form-group-last {
+  border-radius: 0 0 .25em .25em;
+}
+
+#user_create label {
+  font-weight: bold
+}
+
+#user_create small {
+  font-size: .75em;
+}
+

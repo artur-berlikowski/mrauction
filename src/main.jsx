@@ -6,6 +6,8 @@ import App from './App'
 import Home from './pages/Home'
 import Auctions from './pages/Auctions'
 import Watching from './pages/Watching'
+import User from './pages/user/User'
+import UserCreate from './pages/user/UserCreate'
 
 ReactDOM.render(
   <React.StrictMode>
@@ -15,6 +17,9 @@ ReactDOM.render(
           <Route path="home" element={<Home />}></Route>
           <Route path="auctions" element={<Auctions />}></Route>
           <Route path="watching" element={<Watching />}></Route>
+          <Route path="user" element={<User />}>
+            <Route path="register" element={<UserCreate />}></Route>
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
