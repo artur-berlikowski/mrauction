@@ -17,14 +17,18 @@ app.use(session({
   saveUninitialized: false,
   cookie: { secure: false },
 }))
-app.use(cors())//Allow Cross-Origin
-//Enable JSON in body
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
+//Allow Cross-Origin
+app.use(cors())
 //Set json content type headers
 app.use('/', (request, response, next) => {
   response.header("Content-Type", "application/json")
+  next()
 })
+
+//Enable JSON in body
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 
 //Use routes
 app.use('/user', user)
