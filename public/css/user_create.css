@@ -1,14 +1,22 @@
+#user_create .accordion-button:focus {
+  box-shadow: none;
+  border: none
+}
+
+#user_create .accordion-button:not(.collapsed){
+        box-shadow: none;
+        background: #ffffff;
+         color: #363636;
+    }
+
+#user_create .accordion-button:after {
+  background-image: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='%2365CF7E'><path fill-rule='evenodd' d='M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z'/></svg>") !important;
+}
+
 #user_create .form-group {
   background: #65CF7E;
   padding: .75em;
-}
-
-#user_create .form-group-first {
-  border-radius: .25em .25em 0 0;
-}
-
-#user_create .form-group-last {
-  border-radius: 0 0 .25em .25em;
+  border-radius: .25em .25em .25em .25em;
 }
 
 #user_create label {
@@ -17,5 +25,16 @@
 
 #user_create small {
   font-size: .75em;
+}
+
+#user_create #button_submit {
+   background: #65CF7E;
+  color: #262626;
+  border: none;
+}
+
+#user_create #button_submit:hover {
+  background: #45b860;
+  color: #ffffff;
 }
 
