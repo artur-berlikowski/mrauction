@@ -38,7 +38,7 @@ const UserCreate = () => {
     <Form id="user_create">
       <h3 className="mb-5">Create User Account</h3>
       <Form.Group className="d-flex flex-row-reverse">
-        <Button id="button_submit" size="lg" type="button" onClick={handleSubmit}>Create Account</Button>
+        <Button id="button_submit" type="button" onClick={handleSubmit}>Create Account</Button>
       </Form.Group>
       <Accordion flush className="mb-3" defaultActiveKey="0">
         <Accordion.Item eventKey="0">
@@ -138,12 +138,13 @@ const UserCreate = () => {
         </Accordion.Item>
       </Accordion>
       <Form.Group className="d-flex flex-row-reverse">
-        <Button id="button_submit" size="lg" type="button" onClick={handleSubmit}>Create Account</Button>
+        <Button id="button_submit" type="button" onClick={handleSubmit}>Create Account</Button>
       </Form.Group>
     </Form>
   )
 
   function validateFormData(formData) {
+    let errors = []
 
   }
 }
