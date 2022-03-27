@@ -22,7 +22,6 @@ DataManager = {
     } finally {
       if (connection) connection.end()
     }
-
     return result
   }
 }

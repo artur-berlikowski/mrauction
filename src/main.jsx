@@ -18,7 +18,7 @@ ReactDOM.render(
           <Route path="auctions" element={<Auctions />}></Route>
           <Route path="watching" element={<Watching />}></Route>
           <Route path="user" element={<User />}>
-            <Route path="register" element={<UserCreate />}></Route>
+            <Route path="register" element={<UserCreate />} />
           </Route>
         </Route>
       </Routes>
