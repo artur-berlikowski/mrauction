@@ -42,6 +42,7 @@ const UserCreate = () => {
         body: JSON.stringify(formData)
       }
       const result = await (await fetch('http://localhost:3001/user/', options)).json()
+      console.log(result)
       if (result.data.status === 201) {
         setCreated(true)
       }

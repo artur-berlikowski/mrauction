@@ -18,35 +18,39 @@ router.route('/')
     let result = ''
     let insertId = ''
 
-    if (body.username && body.password && body.password_ && body.email && body.email_) {
-      if (body.password === body.password_ && body.email === body.email_) {
-        if (Utility.validateString(body.username, 6, 30, /^[A-za-z0-9_]*$/) &&
-          Utility.validateStringLength(body.password, 6, 70) &&
-          Utility.validateEmail(body.email)) {
-          sql = 'INSERT INTO user (name,email) VALUES (?,?)'
-          args = [body.username, body.email]
-          result = await DataManager.query(sql, args)
-          if (result.affectedRows === 1 && result.warningStatus === 0) {
-            let passwordHash = await Utility.encryptPassword(body.password)
-            insertId = result.insertId
-            sql = 'INSERT INTO user_secure (user_id,hash) VALUES (?,?)'
-            args = [insertId, passwordHash]
+    try {
+      if (body.username && body.password && body.password_ && body.email && body.email_) {
+        if (body.password === body.password_ && body.email === body.email_) {
+          if (Utility.validateString(body.username, 6, 30, /^[A-za-z0-9_]*$/) &&
+            Utility.validateStringLength(body.password, 6, 70) &&
+            Utility.validateEmail(body.email)) {
+            sql = 'INSERT INTO user (name,email) VALUES (?,?)'
+            args = [body.username, body.email]
             result = await DataManager.query(sql, args)
             if (result.affectedRows === 1 && result.warningStatus === 0) {
-              response.json({
-                "data": {
-                  "status": 201,
-                  "message": `user with name ${body.username} was created`
-                }
-              })
-              return
+              let passwordHash = await Utility.encryptPassword(body.password)
+              insertId = result.insertId
+              sql = 'INSERT INTO user_secure (user_id,hash) VALUES (?,?)'
+              args = [insertId, passwordHash]
+              result = await DataManager.query(sql, args)
+              if (result.affectedRows === 1 && result.warningStatus === 0) {
+                response.json({
+                  "data": {
+                    "status": 201,
+                    "message": `user with name ${body.username} was created`
+                  }
+                })
+                return
+              }
             }
           }
         }
       }
+    } catch (error) {
       response.json({ "data": `user with name ${body.username} could not be created` })
       return
     }
+    response.json({ "data": `user with name ${body.username} could not be created` })
   })
   .put((request, response) => {
 
