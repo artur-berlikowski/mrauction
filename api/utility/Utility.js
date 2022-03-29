@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt')
+const crypto = require('crypto')
 
 const Utility = {
   encryptPassword: async (password) => {
@@ -26,6 +27,9 @@ const Utility = {
       return true
     }
     return false
+  },
+  generateTokenSecret: () => {
+    return crypto.randomBytes(64).toString('hex')
   }
 }
 
