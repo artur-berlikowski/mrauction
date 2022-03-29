@@ -25,4 +25,5 @@ dist-ssr
 
 #API node modules
 api/node_modules
+api/.env
 development
