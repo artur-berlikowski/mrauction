@@ -5,7 +5,7 @@ const Utility = {
     const hash = await bcrypt.hash(password, 10)
     return hash
   },
-  compare: async (password, hash) => {
+  comparePassword: async (password, hash) => {
     return await bcrypt.compare(password, hash)
   },
   validateString: (s, minLength, maxLength, pattern) => {

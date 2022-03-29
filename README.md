@@ -1,0 +1,1 @@
+Rename the file .env.template in the api root to .env and set your own configuration parameters

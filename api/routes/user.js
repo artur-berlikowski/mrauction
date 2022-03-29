@@ -84,33 +84,4 @@ router.route('/')
     }
   })
 
-router.route('/auth')
-  .get(async (request, response) => {
-    response.json({ "FUCK": "OFF" })
-  })
-  .post(async (request, response) => {
-    let body = request.body
-    let username = body.username
-    let password = body.password
-    let connection
-    let result
-    let userId
-    let errors = false;
-
-    try {
-      connection = await data.connect()
-    } catch (error) {
-      errors = true
-
-    } finally {
-      if (errors !== false) {
-        response.json({
-          "auth": true
-        })
-        if (connection) connection.end()
-        return
-      }
-    }
-  })
-
 module.exports = router

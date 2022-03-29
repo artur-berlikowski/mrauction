@@ -9,6 +9,7 @@ const app = express()
 
 //Routes
 let user = require(path.resolve(__dirname + '/routes/user'))
+let auth = require(path.resolve(__dirname + '/routes/auth'))
 
 //Session
 app.use(session({
@@ -32,6 +33,7 @@ app.use(bodyParser.json());
 
 //Use routes
 app.use('/user', user)
+app.use('/auth', auth)
 
 //Listen
 app.listen(port, () => {

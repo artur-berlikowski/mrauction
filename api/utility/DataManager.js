@@ -1,3 +1,4 @@
+const { query } = require('express')
 const mariadb = require('mariadb')
 const pool = mariadb.createPool({
   user: process.env.DB_USER,
@@ -23,6 +24,10 @@ DataManager = {
       if (connection) connection.end()
     }
     return result
+  },
+  querySingle: async (sql, args) => {
+    let result = await DataManager.query(sql, args)
+    return result[0]
   }
 }
 
