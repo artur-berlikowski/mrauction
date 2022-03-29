@@ -1,41 +1,32 @@
 require('dotenv').config()
 const express = require('express')
-const session = require('express-session')
 const cors = require('cors')
+const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const path = require('path')
+//General
 const port = 3001
 const app = express()
 
 //Routes
 let user = require(path.resolve(__dirname + '/routes/user'))
 let auth = require(path.resolve(__dirname + '/routes/auth'))
-
-//Session
-app.use(session({
-  secret: 'PuHfmzbyKRqPjWag(ZapZWw*qZFzJ4LS',
-  resave: false,
-  saveUninitialized: false,
-  cookie: { secure: false },
-}))
+//Include the ability to parse header cookies
+app.use(cookieParser())
 //Allow Cross-Origin
 app.use(cors())
-//Set json content type headers
-app.use('/', (request, response, next) => {
-  response.header("Content-Type", "application/json")
-  next()
-})
-
 //Enable JSON in body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
-
 //Use routes
 app.use('/user', user)
 app.use('/auth', auth)
-
-//Listen
+//Set headers
+app.all('/*', (request, response, next) => {
+  response.contentType('application/json');
+  next();
+})
+//Start listening
 app.listen(port, () => {
   console.log(`API Server Listening on Port ${port}`)
 })

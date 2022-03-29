@@ -1,12 +1,24 @@
 const express = require('express')
+const jwt = require('jsonwebtoken')
 const router = express.Router()
 const Utility = require('./../utility/Utility')
 const DataManager = require('./../utility/DataManager')
 const ErrorHTTP = require('./../utility/ErrorHTTP')
+const AuthenticateToken = require('./../middleware/AuthenticateToken')
+const { json } = require('express')
 
 router.route('/')
   .get((request, response) => {
-
+    const token = request.cookies.access_token;
+    if (!token) {
+      return response.json({ "data": false })
+    }
+    try {
+      const data = jwt.verify(token, process.env.TOKEN_SECRET)
+      return response.json({ "data": true })
+    } catch {
+      return response.json({ "data": false })
+    }
   })
   .put((request, response) => {
 
@@ -24,10 +36,10 @@ router.route('/')
           args = [userId]
           result = await DataManager.querySingle(sql, args)
           if (result.hash && await Utility.comparePassword(body.password, result.hash)) {
-            sql = 'INSERT INTO session (user_id,token,expires) VALUES (?,?,?)'
-            args = [userId,]
-            response.json({ "data": true })
-            return
+            const token = jwt.sign({ id: userId, name: body.username }, process.env.TOKEN_SECRET)
+            return response.cookie("access_token", token, { httpOnly: true })
+              .status(200)
+              .json({ "data": true })
           }
         }
         response.json(ErrorHTTP(401))
@@ -41,5 +53,9 @@ router.route('/')
   .delete((request, response) => {
 
   })
+
+router.get('/logout', AuthenticateToken, (request, response) => {
+  return response.clearCookie("access_token").status(200).json({ "data": "true" })
+})
 
 module.exports = router
