@@ -1,15 +1,10 @@
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
 import { Form, Container, Button } from 'react-bootstrap'
-import UserPanelLogin from './UserPanelLogin'
+import { Link } from 'react-router-dom'
 
-const UserPanel = (props) => {
-  let { loggedIn } = props
-
+const UserPanelLogin = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
-  let navigate = useNavigate()
 
   function updateUsername(event) {
     setUsername(event.target.value)
@@ -34,21 +29,16 @@ const UserPanel = (props) => {
     document.location.reload(response.data)
   }
 
-  async function logout(event) {
-    event.preventDefault()
-    let requestOptions = {
-      method: 'GET',
-      credentials: 'include'
-    }
-    let response = await (await fetch('http://localhost:3001/auth/logout', requestOptions)).json()
-    document.location.reload(response.data)
-  }
-
   return (
-    <div id="user-panel">
-      {loggedIn && <Button type="button" onClick={logout}>Log Out</Button> || <UserPanelLogin />}
-    </div>
+    <Form className="d-flex flex-column">
+      <Form.Control className="form-control-sm mb-1" type="text" placeholder="username" onChange={updateUsername} />
+      <Form.Control className="form-control-sm mb-1" type="password" placeholder="password" onChange={updatePassword} />
+      <Container id="user_panel" fluid className="d-flex flex-row-reverse m-0 p-0">
+        <Link to="/user/register"><Button type="button" className="btn btn-primary btn-sm text-center">Register</Button></Link>
+        <Button type="button" className="btn btn-primary btn-sm text-center mx-1" onClick={login}>Sign In</Button>
+      </Container>
+    </Form>
   )
 }
 
-export default UserPanel
+export default UserPanelLogin

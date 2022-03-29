@@ -2,7 +2,9 @@ import { Navbar, Nav, Container, Form } from "react-bootstrap"
 //Components
 import UserPanel from './UserPanel'
 
-const Navigation = () => {
+const Navigation = (props) => {
+  let { loggedIn } = props
+
   return (
     <Navbar>
       <Container className="m-0 p-0">
@@ -11,7 +13,7 @@ const Navigation = () => {
           <Nav.Link href="/auctions">Auctions</Nav.Link>
           <Nav.Link href="/watching">Watching</Nav.Link>
         </Nav>
-        <UserPanel />
+        <UserPanel {...{ loggedIn }} />
       </Container>
     </Navbar>
   )

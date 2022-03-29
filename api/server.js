@@ -14,7 +14,18 @@ let auth = require(path.resolve(__dirname + '/routes/auth'))
 //Include the ability to parse header cookies
 app.use(cookieParser())
 //Allow Cross-Origin
-app.use(cors())
+let allowedOrigins = ['http://localhost:3000']
+app.use(cors({
+  credentials: true,
+  origin: function (origin, callback) {    // allow requests with no origin 
+    // (like mobile apps or curl requests)
+    if (!origin) return callback(null, true); if (allowedOrigins.indexOf(origin) === -1) {
+      var msg = 'The CORS policy for this site does not ' +
+        'allow access from the specified Origin.';
+      return callback(new Error(msg), false);
+    } return callback(null, true);
+  }
+}))
 //Enable JSON in body
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());

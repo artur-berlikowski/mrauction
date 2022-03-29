@@ -15,7 +15,12 @@ router.route('/')
     }
     try {
       const data = jwt.verify(token, process.env.TOKEN_SECRET)
-      return response.json({ "data": true })
+      return response.json({
+        "data": {
+          "loggedIn": true,
+          "name": data.name
+        }
+      })
     } catch {
       return response.json({ "data": false })
     }
@@ -37,7 +42,11 @@ router.route('/')
           result = await DataManager.querySingle(sql, args)
           if (result.hash && await Utility.comparePassword(body.password, result.hash)) {
             const token = jwt.sign({ id: userId, name: body.username }, process.env.TOKEN_SECRET)
-            return response.cookie("access_token", token, { httpOnly: true })
+            return response.cookie("access_token", token, {
+              httpOnly: true,
+              SameSite: true,
+              secure: true
+            })
               .status(200)
               .json({ "data": true })
           }
