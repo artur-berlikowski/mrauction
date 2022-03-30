@@ -5,7 +5,6 @@ const DataManager = require('./../utility/DataManager')
 const StatusHTTP = require('./../utility/StatusHTTP')
 const AuthenticateToken = require('./../middleware/AuthenticateToken')
 const data = require('./../data')
-const passwords = require('./../utility/passwords')
 const router = express.Router()
 
 router.route('/')
