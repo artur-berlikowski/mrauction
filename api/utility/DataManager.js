@@ -28,6 +28,10 @@ DataManager = {
   querySingle: async (sql, args) => {
     let result = await DataManager.query(sql, args)
     return result[0]
+  },
+  getConnection: async () => {
+    let connection = await pool.getConnection()
+    return connection
   }
 }
 

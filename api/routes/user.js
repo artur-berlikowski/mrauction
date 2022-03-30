@@ -2,6 +2,7 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const Utility = require('./../utility/Utility')
 const DataManager = require('./../utility/DataManager')
+const StatusHTTP = require('./../utility/StatusHTTP')
 const AuthenticateToken = require('./../middleware/AuthenticateToken')
 const data = require('./../data')
 const passwords = require('./../utility/passwords')
@@ -14,45 +15,30 @@ router.route('/')
     response.json(result)
   })
   .post(async (request, response) => {
-    let body = request.body
-    let sql = ''
-    let args = ''
-    let result = ''
-    let insertId = ''
-
+    let { username, password, password_, email, email_, first_name, last_name, address, postal_code, phone_home, phone_mobile, continent, country, county, city, timezone } = request.body
+    let connection;
     try {
-      if (body.username && body.password && body.password_ && body.email && body.email_) {
-        if (body.password === body.password_ && body.email === body.email_) {
-          if (Utility.validateString(body.username, 6, 30, /^[A-za-z0-9_]*$/) &&
-            Utility.validateStringLength(body.password, 6, 70) &&
-            Utility.validateEmail(body.email)) {
-            sql = 'INSERT INTO user (name,email) VALUES (?,?)'
-            args = [body.username, body.email]
-            result = await DataManager.query(sql, args)
-            if (result.affectedRows === 1 && result.warningStatus === 0) {
-              let passwordHash = await Utility.encryptPassword(body.password)
-              insertId = result.insertId
-              sql = 'INSERT INTO user_secure (user_id,hash) VALUES (?,?)'
-              args = [insertId, passwordHash]
-              result = await DataManager.query(sql, args)
-              if (result.affectedRows === 1 && result.warningStatus === 0) {
-                response.json({
-                  "data": {
-                    "status": 201,
-                    "message": `user with name ${body.username} was created`
-                  }
-                })
-                return
-              }
-            }
-          }
+      if (username && password && password_ && email && email_ && password === password_ && email === email_) {
+        if (Utility.validateString(username, 6, 30, /^[A-Za-z0-9_]*$/)
+          && Utility.validateStringLength(password, 8, 70)
+          && Utility.validateEmail(email)) {
+          password = await Utility.encryptPassword(password)
+          connection = await DataManager.getConnection()
+          await connection.beginTransaction()
+          let { insertId } = await connection.query('INSERT INTO user (name,email) VALUES (?,?)', [username, email])
+          await connection.query('INSERT INTO user_secure (user_id,hash) VALUES (?,?)', [insertId, password])
+          await connection.query('INSERT INTO user_personal (user_id,first_name,last_name,country,county,city,address,postal_code,phone_home,phone_mobile,timezone) VALUES(?,?,?,?,?,?,?,?,?,?,?)', [insertId, first_name, last_name, country, county, city, address, postal_code, phone_home, phone_mobile, timezone])
+          await connection.commit()
+          return response.status(201).json({ "data": StatusHTTP(201) })
         }
       }
     } catch (error) {
-      response.json({ "data": `user with name ${body.username} could not be created` })
-      return
+      if (connection) await connection.rollback()
+      return response.status(409).json({ "error": StatusHTTP(409) })
+    } finally {
+      if (connection) await connection.end()
     }
-    response.json({ "data": `user with name ${body.username} could not be created` })
+    return response.status(409).json({ "error": StatusHTTP(409) })
   })
   .put((request, response) => {
 
@@ -86,8 +72,17 @@ router.route('/')
     }
   })
 
-router.get('/profile/:name', (request, response) => {
-  response.json("hello")
+router.get('/profile/:name', async (request, response) => {
+  let username = request.params.name
+  try {
+    let { id, name, email } = await DataManager.querySingle('SELECT id,name,email FROM user WHERE name=?', username)
+    if (id && name && email) {
+
+    }
+  } catch {
+
+  }
+  return response.json(StatusHTTP(404))
 })
 
 module.exports = router

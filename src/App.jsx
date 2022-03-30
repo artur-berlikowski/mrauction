@@ -13,7 +13,7 @@ function App() {
   useEffect(async () => {
     let response = await (await fetch('http://localhost:3001/auth/', { credentials: 'include' })).json()
     setLoggedIn(response.data.loggedIn)
-    if (!loggedIn && location.pathname !== '/') {
+    if (!loggedIn && location.pathname !== '/' && location.pathname !== '/auctions' && location.pathname !== '/user/register') {
       navigate('/')
       document.location.reload(true)
     }

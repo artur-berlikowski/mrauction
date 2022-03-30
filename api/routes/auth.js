@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken')
 const router = express.Router()
 const Utility = require('./../utility/Utility')
 const DataManager = require('./../utility/DataManager')
-const ErrorHTTP = require('./../utility/ErrorHTTP')
+const StatusHTTP = require('../utility/StatusHTTP')
 const AuthenticateToken = require('./../middleware/AuthenticateToken')
 const { json } = require('express')
 
@@ -59,10 +59,10 @@ router.route('/')
               .json({ "data": true })
           }
         }
-        response.json(ErrorHTTP(401))
+        response.json(StatusHTTP(401))
         return
       } catch (error) {
-        response.json(ErrorHTTP(401))
+        response.json(StatusHTTP(401))
         return
       }
     }
