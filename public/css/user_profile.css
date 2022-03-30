@@ -1,0 +1,6 @@
+#user_profile #user_profile_picture {
+  width: 10em;
+  height: 10em;
+  border-radius: .25em;
+  border: .25em solid black;
+}

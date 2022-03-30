@@ -4,7 +4,7 @@ import { Container } from 'react-bootstrap'
 const User = () => {
   return (
     <>
-      <Container className="px-5 py-2">
+      <Container className="px-5 py-4">
         <Outlet />
       </Container>
     </>

@@ -4,6 +4,7 @@ const StatusHTTP = (code) => {
 
 const status = {
   //HTTP Status 2xx (Successful Request)
+  200: { code: 200, message: "OK" },
   201: { code: 201, message: "Created" },
   //HTTP Status 4xx (Client Error)
   401: { code: 401, message: "Unauthorized" },

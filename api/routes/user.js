@@ -71,17 +71,50 @@ router.route('/')
     }
   })
 
+router.route('/profile')
+  .get(AuthenticateToken, async (request, response) => {
+    let userId = request.userId
+    let connection;
+    try {
+      connection = await DataManager.getConnection()
+      await connection.beginTransaction()
+      let userData = await connection.query('SELECT name,email FROM user WHERE id=?', userId)
+      let userPersonalData = await connection.query('SELECT first_name,last_name,country,county,city,phone_mobile,timezone FROM user_personal WHERE user_id=?', userId)
+      let result = {
+        profile: { ...userData[0], ...userPersonalData[0] }
+      }
+      console.log(userData)
+      await connection.commit()
+      let data = {
+        ...result,
+        ...StatusHTTP(200)
+      }
+      return response.status(200).json({ "data": data })
+    } catch (error) {
+      console.log(error)
+      if (connection) await connection.rollback()
+      return response.status(404).json({ "error": StatusHTTP(404) })
+    } finally {
+      if (connection) await connection.end()
+    }
+  })
+  .put()
+  .post()
+  .delete()
+
 router.get('/profile/:name', async (request, response) => {
   let username = request.params.name
   try {
     let { id, name, email } = await DataManager.querySingle('SELECT id,name,email FROM user WHERE name=?', username)
     if (id && name && email) {
-
+      let personal = { first_name, last_name, country, county, city, timezone } = await DataManager.querySingle('SELECT first_name,last_name,country,county,city,timezone FROM user_personal WHERE user_id=?', id)
+      let data = { name, email, ...personal }
+      return response.status(200).json({ "data": data })
     }
   } catch {
-
+    return response.json({ "error": StatusHTTP(404) })
   }
-  return response.json(StatusHTTP(404))
+  return response.json({ "error": StatusHTTP(404) })
 })
 
 module.exports = router
