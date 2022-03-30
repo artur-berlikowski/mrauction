@@ -8,3 +8,10 @@
   background: #45b860;
   color: #ffffff;
 }
+
+#user_panel_profile #profile_image {
+  height: 64px;
+  width: 64px;
+  border: .2em solid black;
+  border-radius: .2em;
+}

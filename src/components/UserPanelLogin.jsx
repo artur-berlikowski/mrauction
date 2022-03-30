@@ -1,10 +1,12 @@
 import { useState } from 'react'
 import { Form, Container, Button } from 'react-bootstrap'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 const UserPanelLogin = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+
+  let navigate = useNavigate()
 
   function updateUsername(event) {
     setUsername(event.target.value)
@@ -26,7 +28,10 @@ const UserPanelLogin = () => {
       })
     }
     let response = await (await fetch('http://localhost:3001/auth', requestOptions)).json()
-    document.location.reload(response.data)
+    if (response.data) {
+      navigate('/')
+      document.location.reload(true)
+    }
   }
 
   return (

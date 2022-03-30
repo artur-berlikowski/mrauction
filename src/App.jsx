@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
 import { Container, Row, Col } from 'react-bootstrap'
 //Components
 import Navigation from './components/Navigation'
@@ -7,10 +7,16 @@ import Navigation from './components/Navigation'
 function App() {
   const [loggedIn, setLoggedIn] = useState()
 
+  let navigate = useNavigate()
+  let location = useLocation()
+
   useEffect(async () => {
-    let response = await (await fetch('http://localhost:3001/auth/', { withCredentials: true, credentials: 'include' })).json()
-    console.log(response.data.loggedIn)
+    let response = await (await fetch('http://localhost:3001/auth/', { credentials: 'include' })).json()
     setLoggedIn(response.data.loggedIn)
+    if (!loggedIn && location.pathname !== '/') {
+      navigate('/')
+      document.location.reload(true)
+    }
   }, [])
 
   return (

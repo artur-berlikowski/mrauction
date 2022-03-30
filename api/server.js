@@ -8,13 +8,17 @@ const path = require('path')
 const port = 3001
 const app = express()
 
+app.use((req, res, next) => {
+  next()
+})
+
 //Routes
 let user = require(path.resolve(__dirname + '/routes/user'))
 let auth = require(path.resolve(__dirname + '/routes/auth'))
 //Include the ability to parse header cookies
 app.use(cookieParser())
 //Allow Cross-Origin
-let allowedOrigins = ['http://localhost:3000']
+let allowedOrigins = ['http://localhost:3000', 'localhost']
 app.use(cors({
   credentials: true,
   origin: function (origin, callback) {    // allow requests with no origin 
@@ -32,11 +36,6 @@ app.use(bodyParser.json());
 //Use routes
 app.use('/user', user)
 app.use('/auth', auth)
-//Set headers
-app.all('/*', (request, response, next) => {
-  response.contentType('application/json');
-  next();
-})
 //Start listening
 app.listen(port, () => {
   console.log(`API Server Listening on Port ${port}`)

@@ -2,13 +2,15 @@ const express = require('express')
 const jwt = require('jsonwebtoken')
 const Utility = require('./../utility/Utility')
 const DataManager = require('./../utility/DataManager')
+const AuthenticateToken = require('./../middleware/AuthenticateToken')
 const data = require('./../data')
 const passwords = require('./../utility/passwords')
 const router = express.Router()
 
 router.route('/')
-  .get(async (request, response) => {
-    let result = await DataManager.query('SELECT name FROM user')
+  .get(AuthenticateToken, async (request, response) => {
+    let userId = request.userId
+    let result = await DataManager.querySingle('SELECT name,email FROM user WHERE id=?', [userId])
     response.json(result)
   })
   .post(async (request, response) => {
@@ -83,5 +85,9 @@ router.route('/')
       return
     }
   })
+
+router.get('/profile/:name', (request, response) => {
+  response.json("hello")
+})
 
 module.exports = router

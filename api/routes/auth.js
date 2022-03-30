@@ -11,7 +11,11 @@ router.route('/')
   .get((request, response) => {
     const token = request.cookies.access_token;
     if (!token) {
-      return response.json({ "data": false })
+      return response.json({
+        "data": {
+          loggedIn: false
+        }
+      })
     }
     try {
       const data = jwt.verify(token, process.env.TOKEN_SECRET)
@@ -22,7 +26,11 @@ router.route('/')
         }
       })
     } catch {
-      return response.json({ "data": false })
+      return response.json({
+        "data": {
+          loggedIn: false
+        }
+      })
     }
   })
   .put((request, response) => {
